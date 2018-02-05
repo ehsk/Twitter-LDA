@@ -33,14 +33,43 @@ import java.util.HashMap;
 import Common.Stopwords;
 import Common.FileUtil;
 import Common.JC;
+import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.Namespace;
 
 public class TwitterLDAmain {
 
 	static ArrayList<String> stopWords;
 
+	private static ArgumentParser buildArgParser() {
+		ArgumentParser argParser = ArgumentParsers.newFor("Twitter-LDA")
+				.build()
+				.defaultHelp(true)
+				.description("Runs Twitter-LDA algorithm");
+		argParser.addArgument("-d", "--base_dir")
+				.setDefault("./data")
+				.help("Base directory that must contain filelist_{name}.txt and modelParameters-{name}.txt");
+		argParser.addArgument("-n", "--name")
+				.setDefault("test")
+				.help("Experiment name");
+		argParser.addArgument("--topicWordCount")
+				.type(Integer.class)
+				.setDefault(30)
+				.help("Number of words per topic");
+		argParser.addArgument("--backgroundWordCount")
+				.type(Integer.class)
+				.setDefault(50)
+				.help("Number of background words");
+
+		return argParser;
+	}
+
 	public static void main(String args[]) throws Exception {
-		String base = System.getProperty("user.dir") + "/data/";
-		String name = "test";
+		final ArgumentParser argParser = buildArgParser();
+		final Namespace ns = argParser.parseArgsOrFail(args);
+
+		String base = ns.getString("base_dir");
+		String name = ns.getString("name");
 		char[] options = { 'f', 'i', 'o', 'p', 's' };
 		String filelist = base + "/filelist_" + name + ".txt";
 		String dataDir = base + "/Data4Model/" + name + "/";
@@ -71,8 +100,8 @@ public class TwitterLDAmain {
 
 		new Stopwords();
 		Stopwords.addStopfile(stopfile);
-		int outputTopicwordCnt = 30;
-		int outputBackgroundwordCnt = 50;
+		int outputTopicwordCnt = ns.getInt("topicWordCount");
+		int outputBackgroundwordCnt = ns.getInt("backgroundWordCount");
 
 		String outputWordsInTopics = outputDir + "WordsInTopics.txt";
 		String outputBackgroundWordsDistribution = outputDir

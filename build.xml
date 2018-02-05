@@ -11,7 +11,8 @@
     <property name="source" value="1.7"/>
     <path id="Twitter-LDA-master.classpath">
         <pathelement location="bin"/>
-        <pathelement location="lib/args4j-2.0.6.jar"/>
+        <!--<pathelement location="lib/args4j-2.0.6.jar"/>-->
+        <pathelement location="lib/argparse4j-0.8.1.jar"/>
         <pathelement location="lib/jargs.jar"/>
         <pathelement location="lib/TwitterTokenizer.jar"/>
     </path>
